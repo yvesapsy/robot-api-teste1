@@ -6,7 +6,6 @@ use Phalcon\Http\Response;
 use Phalcon\Loader;
 use Phalcon\Mvc\Micro;
 
-// Use Loader() to autoload our model
 $loader = new Loader();
 
 $loader->registerNamespaces(['Store\Toys' => __DIR__ . '/models/']);
@@ -24,7 +23,7 @@ $di->set(
                 'host'     => 'localhost',
                 'username' => 'root',
                 'password' => 'password',
-                'dbname'   => 'robotics',
+                'dbname'   => 'robotics'
             ]
         );
     }
@@ -51,11 +50,10 @@ $app->get(
         foreach ($robots as $robot) {
             $data[] = [
                 'id'   => $robot->id,
-                'name' => $robot->name,
+                'name' => $robot->name
             ];
         }
 
-        // Create a response
         $response = new Response();
         $response->setJsonContent($data);
 
@@ -92,7 +90,6 @@ $app->get(
             ];
         }
 
-        // Create a response
         $response = new Response();
         $response->setJsonContent($data);
 
@@ -114,11 +111,10 @@ $app->get(
         $robot = $app->modelsManager->executeQuery(
             $phql,
             [
-                'id' => $id,
+                'id' => $id
             ]
         )->getFirst();
 
-        // Create a response
         $response = new Response();
 
         if ($robot === null) {
@@ -133,7 +129,9 @@ $app->get(
                     'status' => 'FOUND',
                     'data'   => [
                         'id'   => $robot->id,
-                        'name' => $robot->name
+                        'name' => $robot->name,
+                        'type' => $robot->type,
+                        'year' => $robot->year
                     ]
                 ]
             );
@@ -164,11 +162,10 @@ $app->post(
             [
                 'name' => $robot->name,
                 'type' => $robot->type,
-                'year' => $robot->year,
+                'year' => $robot->year
             ]
         );
 
-        // Create a response
         $response = new Response();
 
         // Check if the insertion was successful
@@ -181,7 +178,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     'status' => 'OK',
-                    'data'   => $robot,
+                    'data'   => $robot
                 ]
             );
         } else {
@@ -198,7 +195,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     'status'   => 'ERROR',
-                    'messages' => $errors,
+                    'messages' => $errors
                 ]
             );
         }
@@ -225,7 +222,6 @@ $app->put(
             ]
         )->getFirst();
 
-        // Create a response
         $response = new Response();
 
         if ($robot === null) {
@@ -252,7 +248,7 @@ $app->put(
                     'id'   => $id,
                     'name' => $robot->name,
                     'type' => $robot->type,
-                    'year' => $robot->year,
+                    'year' => $robot->year
                 ]
             );
 
@@ -276,7 +272,7 @@ $app->put(
                 $response->setJsonContent(
                     [
                         'status'   => 'ERROR',
-                        'messages' => $errors,
+                        'messages' => $errors
                     ]
                 );
             }
@@ -300,11 +296,10 @@ $app->delete(
         $robot = $app->modelsManager->executeQuery(
             $phql,
             [
-                'id' => $id,
+                'id' => $id
             ]
         )->getFirst();
 
-        // Create a response
         $response = new Response();
 
         if ($robot === null) {
@@ -322,7 +317,7 @@ $app->delete(
             $status = $app->modelsManager->executeQuery(
                 $phql,
                 [
-                    'id' => $id,
+                    'id' => $id
                 ]
             );
 
@@ -345,7 +340,7 @@ $app->delete(
                 $response->setJsonContent(
                     [
                         'status'   => 'ERROR',
-                        'messages' => $errors,
+                        'messages' => $errors
                     ]
                 );
             }
@@ -356,5 +351,5 @@ $app->delete(
 );
 
 $request = new Phalcon\Http\Request();
-$fixed_uri = str_replace('/phalcon-api/public', '', $request->getURI());
+$fixed_uri = str_replace('/robot-api-teste1/public', '', $request->getURI());
 $app->handle($fixed_uri);
